@@ -1,0 +1,46 @@
+
+services:
+  api_agent:
+    build: ./agents/api_agent
+    ports:
+      - "8001:8000"
+    env_file: .env
+
+  scraping_agent:
+    build: ./agents/scraping_agent
+    env_file: .env
+
+  retriever_agent:
+    build: ./agents/retriever_agent
+    env_file: .env
+
+  analysis_agent:
+    build: ./agents/analysis_agent
+    env_file: .env
+
+  language_agent:
+    build: ./agents/language_agent
+    env_file: .env
+
+  voice_agent:
+    build: ./agents/voice_agent
+    env_file: .env
+
+  orchestrator:
+    build: ./orchestrator
+    ports:
+      - "8000:8000"
+    depends_on:
+      - api_agent
+      - scraping_agent
+      - retriever_agent
+      - analysis_agent
+      - language_agent
+      - voice_agent
+
+  streamlit:
+    build: ./streamlit_app
+    ports:
+      - "8501:8501"
+    depends_on:
+      - orchestrator
